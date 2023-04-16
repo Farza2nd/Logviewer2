@@ -4,7 +4,7 @@ import dateutil.parser
 from sanic import response
 from natural.date import duration
 
-from .formatter import format_content_html
+from core.formatter import format_content_html
 
 
 class LogEntry:
@@ -31,7 +31,7 @@ class LogEntry:
 
     @property
     def system_avatar_url(self):
-        return "https://discordapp.com/assets/" "f78426a064bc9dd24847519259bc42af.png"
+        return "/static/img/avatar_self.png"
 
     @property
     def human_closed_at(self):
@@ -109,6 +109,19 @@ class LogEntry:
             out += f"Thread closed at {closed_time} \n"
 
         return response.text(out)
+
+class LogList:
+    def __init__(self, app, data, prefix, page, max_page, status_open, count_all):
+        self.app = app
+        self.logs = data
+        self.prefix = prefix
+        self.page = page
+        self.max_page = max_page
+        self.status_open = status_open
+        self.count_all = count_all
+
+    def render_html(self):
+        return self.app.ctx.render_template("loglist", data=self)
 
 
 class User:
